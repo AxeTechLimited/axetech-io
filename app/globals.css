@@ -1,0 +1,123 @@
+/* Axe Tech Design System v3 — Token Layer */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* Brand spectrum */
+  --ax-aurora:  #00D4FF;
+  --ax-cobalt:  #1E40FF;
+  --ax-voltage: #8B3FFF;
+  --ax-magenta: #FF2E93;
+  --ax-ember:   #FF8A3D;
+  --ax-solar:   #FFD66B;
+  --ax-gradient: linear-gradient(110deg, #00D4FF 0%, #1E40FF 22%, #8B3FFF 50%, #FF2E93 78%, #FF8A3D 100%);
+
+  /* Surfaces (dark default) */
+  --bg:          #08090D;
+  --bg-elevated: #11131A;
+  --bg-raised:   #1A1D27;
+  --border:      #262A37;
+  --border-soft: #4B4F5E;
+
+  /* Text */
+  --text:       #F2F3F6;
+  --text-soft:  #C4C7D2;
+  --text-mute:  #8B8F9D;
+  --text-faint: #5C6070;
+
+  /* Type */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+  /* Spacing */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 24px; --space-6: 32px; --space-7: 48px; --space-8: 64px;
+  --space-9: 96px; --space-10: 128px;
+
+  /* Radius */
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 24px; --r-pill: 999px;
+
+  /* Motion */
+  --ease-luxe: cubic-bezier(.16, .84, .3, 1);
+  --ease-snap: cubic-bezier(.32, 0, .18, 1);
+  --dur-luxe:  320ms;
+}
+
+[data-theme="light"] {
+  --bg:          #FAFAFB;
+  --bg-elevated: #FFFFFF;
+  --bg-raised:   #F1F2F5;
+  --border:      #E4E6EC;
+  --border-soft: #C9CCD4;
+  --text:        #0F1117;
+  --text-soft:   #1F2230;
+  --text-mute:   #535864;
+  --text-faint:  #828694;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--ax-voltage); color: white; }
+
+/* Button — gradient ring, animated drift */
+@keyframes ax-drift {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px 24px;
+  border-radius: var(--r-sm);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: .01em;
+  line-height: 1;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  isolation: isolate;
+  color: var(--text);
+  transition: transform var(--dur-luxe) var(--ease-luxe), letter-spacing var(--dur-luxe) var(--ease-luxe);
+}
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: var(--ax-gradient);
+  background-size: 220% 220%;
+  animation: ax-drift 8s ease-in-out infinite;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+  z-index: -1;
+  transition: padding var(--dur-luxe) var(--ease-luxe);
+}
+.btn:hover { transform: translateY(-1px); letter-spacing: .025em; }
+.btn:hover::before { padding: 2px; animation-duration: 4s; }
+.btn .arrow { transition: transform var(--dur-luxe) var(--ease-luxe); display: inline-block; }
+.btn:hover .arrow { transform: translateX(6px); }
+.btn:active { transform: translateY(0) scale(.985); transition-duration: 120ms; }
+
+.text-grad {
+  background: var(--ax-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
