@@ -1,0 +1,3123 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Axe Tech · Cutting Edge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <!-- Three.js for the 3D hero mark -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+  <style>
+    /* ============================================================
+       AXE TECH DESIGN SYSTEM v3 — TOKEN LAYER
+       ============================================================ */
+    :root {
+      /* Brand spectrum */
+      --ax-aurora:  #00D4FF;
+      --ax-cobalt:  #1E40FF;
+      --ax-voltage: #8B3FFF;
+      --ax-magenta: #FF2E93;
+      --ax-ember:   #FF8A3D;
+      --ax-solar:   #FFD66B;
+      --ax-gradient: linear-gradient(110deg, #00D4FF 0%, #1E40FF 22%, #8B3FFF 50%, #FF2E93 78%, #FF8A3D 100%);
+      --ax-gradient-soft: linear-gradient(135deg, rgba(0,212,255,0.18), rgba(139,63,255,0.18) 50%, rgba(255,46,147,0.18) 100%);
+      --ax-gradient-edge: linear-gradient(135deg, #00D4FF, #8B3FFF 50%, #FF2E93);
+
+      /* Surfaces (dark default) */
+      --bg:          #08090D;
+      --bg-elevated: #11131A;
+      --bg-raised:   #1A1D27;
+      --border:      #262A37;
+      --border-soft: #4B4F5E;
+      --halo-opacity: 0.55;
+
+      /* Text */
+      --text:       #F2F3F6;
+      --text-soft:  #C4C7D2;
+      --text-mute:  #8B8F9D;
+      --text-faint: #5C6070;
+
+      /* Type */
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --font-body:    'Inter', system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+      /* Spacing */
+      --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+      --space-5: 24px; --space-6: 32px; --space-7: 48px; --space-8: 64px;
+      --space-9: 96px; --space-10: 128px;
+
+      /* Radius */
+      --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 24px; --r-pill: 999px;
+
+      /* Motion (v3 design system) */
+      --ease-luxe:   cubic-bezier(.16, .84, .3, 1);
+      --ease-snap:   cubic-bezier(.32, 0, .18, 1);
+      --ease-cut:    cubic-bezier(.7, 0, .3, 1);
+      --ease-glide:  cubic-bezier(.4, 0, .2, 1);
+      --ease-edge:   cubic-bezier(.22, 1, .36, 1);
+      --ease-out:    cubic-bezier(.22, .61, .36, 1);
+      --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+      --dur-micro:   100ms;
+      --dur-small:   200ms;
+      --dur-fast:    180ms;
+      --dur-base:    240ms;
+      --dur-luxe:    320ms;
+      --dur-medium:  480ms;
+      --dur-slow:    640ms;
+      --dur-large:   720ms;
+      --dur-epic:    1200ms;
+      --dur-cinema:  1200ms;
+      --stagger-tight:   30ms;
+      --stagger-base:    60ms;
+      --stagger-cascade: 120ms;
+      --drift-ambient:   8s;
+      --drift-active:    4s;
+      --drift-shimmer:   1.6s;
+
+      /* Theme transition */
+      --theme-trans: background-color var(--dur-luxe) var(--ease-luxe),
+                     color var(--dur-luxe) var(--ease-luxe),
+                     border-color var(--dur-luxe) var(--ease-luxe);
+    }
+
+    [data-theme="light"] {
+      --bg:          #FAFAFB;
+      --bg-elevated: #FFFFFF;
+      --bg-raised:   #F1F2F5;
+      --border:      #E4E6EC;
+      --border-soft: #C9CCD4;
+      --text:        #0F1117;
+      --text-soft:   #1F2230;
+      --text-mute:   #535864;
+      --text-faint:  #828694;
+      --halo-opacity: 0.30;
+    }
+
+    /* ============================================================
+       BASE
+       ============================================================ */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: var(--theme-trans);
+    }
+    a { color: inherit; text-decoration: none; transition: color var(--dur-fast) var(--ease-luxe); }
+    button { font: inherit; cursor: pointer; border: none; background: transparent; color: inherit; }
+    img, svg { display: block; max-width: 100%; }
+    ::selection { background: var(--ax-voltage); color: white; }
+
+    /* Focus rings (a11y) */
+    :focus-visible {
+      outline: 2px solid var(--ax-aurora);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+    button:focus-visible, a:focus-visible {
+      outline: 2px solid var(--ax-aurora);
+      outline-offset: 3px;
+    }
+
+    /* Visually hidden (SR-only) */
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0,0,0,0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    /* Scroll progress bar (2px gradient, fills to 100% at page end) */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--ax-gradient);
+      background-size: 220% 220%;
+      transform: scaleX(0);
+      transform-origin: left center;
+      z-index: 400;
+      pointer-events: none;
+      animation: ax-drift var(--drift-ambient) ease-in-out infinite;
+      will-change: transform;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .scroll-progress { animation: none; }
+    }
+
+    /* Section meta (canonical numbered eyebrow) */
+    .section-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-5);
+    }
+    .section-meta .num {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-mute);
+      letter-spacing: .15em;
+    }
+    .section-meta .bar {
+      flex: 0 0 32px;
+      height: 1px;
+      background: var(--border);
+    }
+    .section-meta .label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .25em;
+      color: var(--text-soft);
+    }
+
+    /* ============================================================
+       HALO BACKGROUND
+       ============================================================ */
+    .bg-halo {
+      position: fixed;
+      top: -25%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1400px;
+      height: 1400px;
+      max-width: 140vw;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(0,212,255,.18), transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(139,63,255,.20), transparent 55%),
+        radial-gradient(circle at 50% 80%, rgba(255,46,147,.10), transparent 60%);
+      filter: blur(60px);
+      opacity: var(--halo-opacity);
+      pointer-events: none;
+      z-index: 0;
+      transition: opacity var(--dur-slow) var(--ease-luxe);
+      animation: halo-drift 18s ease-in-out infinite;
+    }
+    @keyframes halo-drift {
+      0%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
+      50%      { transform: translateX(-48%) translateY(-30px) scale(1.05); }
+    }
+
+    /* ============================================================
+       BUTTON SYSTEM (v3 design system spec)
+       Variants: primary (animated ring), secondary (ring on hover), ghost (no ring).
+       ============================================================ */
+    @keyframes ax-drift {
+      0%, 100% { background-position: 0% 50%; }
+      50%      { background-position: 100% 50%; }
+    }
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 24px;
+      border-radius: var(--r-sm);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: .01em;
+      line-height: 1;
+      white-space: nowrap;
+      color: var(--text);
+      background: transparent;
+      isolation: isolate;
+      transition:
+        transform var(--dur-luxe) var(--ease-luxe),
+        letter-spacing var(--dur-luxe) var(--ease-luxe),
+        color var(--dur-fast) var(--ease-luxe);
+    }
+    /* Arrow with precision trail line that draws in on hover */
+    .btn .arrow {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      transition: transform var(--dur-luxe) var(--ease-luxe);
+    }
+    .btn .arrow::before {
+      content: "";
+      position: absolute;
+      right: 100%;
+      top: 50%;
+      transform: translate(4px, -50%) scaleX(0);
+      transform-origin: right center;
+      width: 14px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, currentColor);
+      opacity: 0;
+      border-radius: 2px;
+      transition:
+        transform var(--dur-luxe) var(--ease-luxe),
+        opacity var(--dur-luxe) var(--ease-luxe);
+    }
+    .btn:active { transform: translateY(0) scale(.985); transition-duration: 120ms; transition-timing-function: var(--ease-snap); }
+    .btn:focus-visible { outline: none; }
+
+    /* ── Primary ── animated gradient ring + arrow choreography */
+    .btn-primary {
+      color: var(--text);
+    }
+    .btn-primary::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1.5px;
+      background: var(--ax-gradient);
+      background-size: 220% 220%;
+      animation: ax-drift var(--drift-ambient) ease-in-out infinite;
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      pointer-events: none;
+      z-index: -1;
+      transition: padding var(--dur-luxe) var(--ease-luxe);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      letter-spacing: .025em;
+    }
+    .btn-primary:hover::before {
+      padding: 2px;
+      animation-duration: var(--drift-active);
+    }
+    .btn-primary:hover .arrow { transform: translateX(6px); }
+    .btn-primary:hover .arrow::before {
+      opacity: .9;
+      transform: translate(4px, -50%) scaleX(1);
+    }
+    .btn-primary:focus-visible::before { padding: 2.5px; }
+
+    /* ── Secondary ── calm at rest, gradient ring on hover */
+    .btn-secondary {
+      color: var(--text-soft);
+    }
+    .btn-secondary::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1.5px;
+      background: var(--border);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      pointer-events: none;
+      z-index: -1;
+      transition: background var(--dur-luxe) var(--ease-luxe), padding var(--dur-luxe) var(--ease-luxe);
+    }
+    .btn-secondary:hover {
+      color: var(--text);
+      transform: translateY(-1px);
+      letter-spacing: .025em;
+    }
+    .btn-secondary:hover::before {
+      background: var(--ax-gradient);
+      background-size: 220% 220%;
+      animation: ax-drift 6s ease-in-out infinite;
+      padding: 1.5px;
+    }
+    .btn-secondary:hover .arrow { transform: translateX(5px); }
+    .btn-secondary:hover .arrow::before { opacity: .8; transform: translate(4px, -50%) scaleX(1); }
+
+    /* ── Ghost ── no ring, bg lift on hover */
+    .btn-ghost {
+      color: var(--text-soft);
+      isolation: auto;
+    }
+    .btn-ghost:hover {
+      color: var(--text);
+      background: var(--bg-raised);
+    }
+    .btn-ghost:hover .arrow { transform: translateX(4px); }
+
+    /* Sizes */
+    .btn-sm { padding: 9px 18px; font-size: 13px; gap: 8px; }
+    .btn-lg { padding: 17px 32px; font-size: 16px; gap: 12px; }
+    .btn-lg .arrow::before { width: 18px; }
+
+    /* Reduced motion: calm static ring */
+    @media (prefers-reduced-motion: reduce) {
+      .btn-primary::before, .btn-secondary:hover::before { animation: none !important; }
+      .btn:hover { transform: none !important; letter-spacing: .01em !important; }
+      .btn:hover .arrow { transform: translateX(2px) !important; }
+    }
+
+    /* ============================================================
+       SHAPE MORPHING (v3 design system)
+       ============================================================ */
+    .shape-bg {
+      position: absolute;
+      pointer-events: none;
+    }
+    .shape-bg .shape-stroke {
+      fill: none;
+      stroke: url(#shapeGradient);
+      stroke-width: 1;
+      opacity: 0.4;
+    }
+    .shape-canvas {
+      position: relative;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      aspect-ratio: 1;
+      transition: border-color var(--dur-luxe) var(--ease-luxe);
+    }
+    .shape-canvas:hover { border-color: var(--border-soft); }
+    .shape-canvas svg { width: 100%; height: 100%; display: block; }
+    .shape-canvas .shape-stroke {
+      fill: none;
+      stroke: url(#shapeGradient);
+      stroke-width: 1.5;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      transition: stroke-width var(--dur-luxe) var(--ease-luxe);
+    }
+    .shape-canvas:hover .shape-stroke { stroke-width: 2; }
+    .shape-canvas .shape-fill {
+      fill: url(#shapeGradient);
+      opacity: 0.08;
+      transition: opacity var(--dur-luxe) var(--ease-luxe);
+    }
+    .shape-canvas:hover .shape-fill { opacity: 0.16; }
+    .shape-canvas .shape-readout {
+      position: absolute;
+      top: var(--space-3);
+      right: var(--space-4);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: .15em;
+      color: var(--text-soft);
+      pointer-events: none;
+      text-transform: uppercase;
+    }
+    .shape-canvas .shape-readout span { color: var(--ax-aurora); }
+    .shape-canvas .shape-label {
+      position: absolute;
+      bottom: var(--space-3);
+      left: var(--space-4);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .25em;
+      color: var(--text-mute);
+      pointer-events: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .shape-bg svg polygon, .shape-canvas svg polygon { animation: none !important; }
+    }
+
+    /* ============================================================
+       SIGNATURE MOMENT 1 — THE REVEAL (clip-path mask sweep on H1)
+       ============================================================ */
+    @keyframes reveal-mask {
+      0%   { clip-path: inset(0 100% 0 0); }
+      100% { clip-path: inset(0 0% 0 0); }
+    }
+    .reveal-text {
+      display: inline-block;
+      /* Expand the clip box so descenders (g, y, p, q) aren't cut off.
+         Negative margin keeps layout unchanged. */
+      padding: 0.12em 0.04em 0.28em;
+      margin: -0.12em -0.04em -0.28em;
+      animation: reveal-mask 800ms var(--ease-luxe) both;
+    }
+
+    /* ============================================================
+       SIGNATURE MOMENT 2 — THE STRIKE (gradient hairline scribes on commit)
+       ============================================================ */
+    @keyframes scribe {
+      0%   { left: -20%; width: 0; opacity: 0; }
+      20%  { opacity: 1; }
+      50%  { left: 0; width: 120%; opacity: 1; }
+      85%  { left: 100%; width: 20%; opacity: 1; }
+      100% { left: 120%; width: 0; opacity: 0; }
+    }
+    .btn .strike-line {
+      position: absolute;
+      top: 50%;
+      left: -10%;
+      width: 0;
+      height: 1.5px;
+      background: linear-gradient(90deg, transparent, var(--ax-aurora) 30%, white 50%, var(--ax-magenta) 70%, transparent);
+      transform: translateY(-50%);
+      pointer-events: none;
+      opacity: 0;
+      z-index: 2;
+    }
+    .btn.striking .strike-line {
+      animation: scribe 560ms var(--ease-cut) forwards;
+    }
+
+    /* ============================================================
+       SIGNATURE MOMENT 3 — SHARPENING (gradient hairline on card hover)
+       Used on .pillar / .now-card / .ag-service / .hero-meta .item / etc.
+       ============================================================ */
+    .sharpen { position: relative; isolation: isolate; }
+    .sharpen::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      height: 1px;
+      width: 0%;
+      background: var(--ax-gradient);
+      transition: width var(--dur-luxe) var(--ease-luxe);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .sharpen:hover::after { width: 100%; }
+
+    /* ============================================================
+       TOC dots (sticky right rail navigator)
+       ============================================================ */
+    .toc {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .toc a {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border-soft);
+      transition: all var(--dur-fast) var(--ease-out);
+      position: relative;
+    }
+    .toc a::after {
+      content: attr(title);
+      position: absolute;
+      right: calc(100% + 12px);
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--dur-fast) var(--ease-out);
+    }
+    .toc a:hover, .toc a.active { background: var(--ax-aurora); transform: scale(1.4); }
+    .toc a:hover::after { opacity: 1; }
+    @media (max-width: 1100px) { .toc { display: none; } }
+
+    /* ============================================================
+       UTILS
+       ============================================================ */
+    .text-grad {
+      background: var(--ax-gradient);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: ax-drift 14s ease-in-out infinite;
+    }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .3em;
+      color: var(--text-mute);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .eyebrow .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--ax-aurora);
+      box-shadow: 0 0 12px var(--ax-aurora);
+      animation: pulse-dot 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; box-shadow: 0 0 12px var(--ax-aurora); }
+      50%      { opacity: .55; box-shadow: 0 0 20px var(--ax-aurora); }
+    }
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 var(--space-5);
+      position: relative;
+      z-index: 1;
+    }
+    section { position: relative; z-index: 1; }
+
+    /* ============================================================
+       HEADER
+       ============================================================ */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: color-mix(in srgb, var(--bg) 78%, transparent);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--border);
+      transition: var(--theme-trans);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 var(--space-5);
+      gap: var(--space-5);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform var(--dur-luxe) var(--ease-luxe);
+    }
+    .logo:hover { transform: translateY(-1px); }
+    .logo img { height: 30px; width: auto; }
+    .logo .light-only { display: none; }
+    [data-theme="light"] .logo .dark-only { display: none; }
+    [data-theme="light"] .logo .light-only { display: block; }
+
+    .nav-desktop {
+      display: flex;
+      gap: var(--space-6);
+      font-size: 14px;
+      color: var(--text-soft);
+    }
+    .nav-desktop a {
+      position: relative;
+      padding: 6px 0;
+    }
+    .nav-desktop a::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 0;
+      height: 1px;
+      background: var(--ax-gradient);
+      transform: translateX(-50%);
+      transition: width var(--dur-luxe) var(--ease-luxe);
+    }
+    .nav-desktop a:hover { color: var(--text); }
+    .nav-desktop a:hover::after { width: 100%; }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    /* Theme toggle (44×44 a11y touch target) */
+    .theme-toggle {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--r-pill);
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-soft);
+      transition: var(--theme-trans), transform var(--dur-luxe) var(--ease-luxe);
+      position: relative;
+      overflow: hidden;
+    }
+    .theme-toggle:hover { color: var(--text); transform: translateY(-1px); }
+    .theme-toggle svg { width: 16px; height: 16px; transition: transform var(--dur-slow) var(--ease-luxe), opacity var(--dur-fast) var(--ease-luxe); position: absolute; }
+    .theme-toggle .icon-sun { opacity: 0; transform: rotate(-90deg) scale(.6); }
+    .theme-toggle .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+    [data-theme="light"] .theme-toggle .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+    [data-theme="light"] .theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg) scale(.6); }
+
+    /* Hamburger (44×44 a11y touch target) */
+    .hamburger {
+      display: none;
+      width: 44px;
+      height: 44px;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--r-pill);
+      border: 1px solid var(--border);
+      color: var(--text-soft);
+      transition:
+        color var(--dur-fast) var(--ease-out),
+        border-color var(--dur-fast) var(--ease-out),
+        transform var(--dur-luxe) var(--ease-luxe),
+        background-color var(--dur-luxe) var(--ease-luxe);
+    }
+    .hamburger:hover {
+      color: var(--text);
+      border-color: var(--border-soft);
+      transform: translateY(-1px);
+    }
+    .hamburger svg { transition: transform var(--dur-base) var(--ease-out); }
+
+    /* ============================================================
+       MOBILE DRAWER (design-system spec: full-screen, sectioned)
+       ============================================================ */
+    .mobile-drawer {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 200;
+      padding: var(--space-6) var(--space-5) var(--space-7);
+      transform: translateX(100%);
+      transition:
+        transform var(--dur-slow) var(--ease-luxe),
+        background-color var(--dur-luxe) var(--ease-luxe);
+      overflow-y: auto;
+      visibility: hidden;
+    }
+    .mobile-drawer.open {
+      transform: translateX(0);
+      visibility: visible;
+    }
+    .mobile-drawer .drawer-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--border);
+    }
+    .mobile-drawer .drawer-head .logo img { height: 28px; width: auto; }
+    .mobile-drawer .drawer-section {
+      margin-bottom: var(--space-5);
+    }
+    .mobile-drawer .drawer-section-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .25em;
+      color: var(--text-mute);
+      padding: 0 var(--space-3);
+      margin-bottom: var(--space-2);
+      font-weight: 500;
+    }
+    .mobile-drawer .drawer-section nav {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .mobile-drawer .drawer-link {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: 12px var(--space-3);
+      border-radius: var(--r-sm);
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-soft);
+      position: relative;
+      min-height: 44px;
+      transition:
+        background-color var(--dur-luxe) var(--ease-luxe),
+        color var(--dur-luxe) var(--ease-luxe),
+        padding-left var(--dur-luxe) var(--ease-luxe);
+    }
+    .mobile-drawer .drawer-link svg {
+      flex-shrink: 0;
+      color: var(--text-mute);
+      transition:
+        color var(--dur-luxe) var(--ease-luxe),
+        transform var(--dur-luxe) var(--ease-luxe);
+    }
+    .mobile-drawer .drawer-link:hover {
+      background: var(--bg-raised);
+      color: var(--text);
+    }
+    .mobile-drawer .drawer-link:hover svg {
+      color: var(--ax-aurora);
+      transform: translateX(2px);
+    }
+    .mobile-drawer .drawer-link.active {
+      background: var(--ax-gradient-soft);
+      color: var(--text);
+    }
+    .mobile-drawer .drawer-link.active::before {
+      content: "";
+      position: absolute;
+      left: -16px;
+      top: 12px;
+      bottom: 12px;
+      width: 2px;
+      border-radius: 2px;
+      background: var(--ax-gradient-edge);
+    }
+    .mobile-drawer .drawer-link.active svg { color: var(--ax-voltage); }
+    .mobile-drawer .drawer-link .ext {
+      margin-left: auto;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: .2em;
+      color: var(--text-faint);
+      text-transform: uppercase;
+    }
+    .mobile-drawer .drawer-cta {
+      margin-top: var(--space-6);
+      padding-top: var(--space-5);
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .mobile-drawer .drawer-cta .btn { width: 100%; }
+    .mobile-drawer .drawer-foot-meta {
+      margin-top: var(--space-5);
+      padding-top: var(--space-5);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-4);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+
+    /* Lock background scroll while drawer is open */
+    body.drawer-open { overflow: hidden; }
+
+    /* ============================================================
+       HERO
+       ============================================================ */
+    .hero {
+      padding: clamp(80px, 12vw, 160px) 0 var(--space-9);
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(48px, 9.2vw, 124px);
+      font-weight: 400;
+      letter-spacing: -.045em;
+      line-height: 0.92;
+      margin: var(--space-5) 0 var(--space-5);
+    }
+    .hero p {
+      font-size: clamp(16px, 1.55vw, 20px);
+      color: var(--text-soft);
+      max-width: 64ch;
+      margin-bottom: var(--space-7);
+    }
+    .hero .cta-row {
+      display: flex;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+    }
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--space-3);
+      margin-top: var(--space-9);
+      padding-top: var(--space-7);
+      border-top: 1px solid var(--border);
+    }
+    .hero-meta .item {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      padding: var(--space-5);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      isolation: isolate;
+      overflow: hidden;
+      transition:
+        background-color var(--dur-luxe) var(--ease-luxe),
+        border-color var(--dur-luxe) var(--ease-luxe),
+        transform var(--dur-luxe) var(--ease-luxe);
+    }
+    .hero-meta .item::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--ax-gradient);
+      opacity: 0;
+      mix-blend-mode: overlay;
+      transition: opacity var(--dur-luxe) var(--ease-luxe);
+      pointer-events: none;
+      z-index: -1;
+    }
+    .hero-meta .item:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-soft);
+    }
+    .hero-meta .item:hover::before { opacity: .06; }
+    .hero-meta .item .label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--text-mute);
+    }
+    .hero-meta .item .label svg {
+      width: 14px;
+      height: 14px;
+      color: var(--ax-aurora);
+      flex-shrink: 0;
+    }
+    .hero-meta .item .value {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: -.01em;
+      line-height: 1.25;
+      color: var(--text);
+    }
+
+    /* Reveal animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition:
+        opacity var(--dur-slow) var(--ease-luxe),
+        transform var(--dur-slow) var(--ease-luxe);
+    }
+    .reveal.is-visible { opacity: 1; transform: translateY(0); }
+    .reveal.delay-1 { transition-delay: 80ms; }
+    .reveal.delay-2 { transition-delay: 160ms; }
+    .reveal.delay-3 { transition-delay: 240ms; }
+    .reveal.delay-4 { transition-delay: 320ms; }
+
+    /* ============================================================
+       SECTION HEADERS
+       ============================================================ */
+    .section {
+      padding: var(--space-9) 0;
+      border-top: 1px solid var(--border);
+      transition: var(--theme-trans);
+    }
+    .section h2 {
+      font-family: var(--font-display);
+      font-size: clamp(34px, 4.5vw, 56px);
+      font-weight: 500;
+      letter-spacing: -.025em;
+      line-height: 1.05;
+      margin: var(--space-5) 0 var(--space-7);
+      max-width: 22ch;
+    }
+    .section .lede {
+      font-size: clamp(16px, 1.4vw, 18px);
+      color: var(--text-soft);
+      max-width: 60ch;
+      margin-bottom: var(--space-7);
+    }
+
+    /* ============================================================
+       PILLAR CARDS
+       ============================================================ */
+    .pillar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-5);
+    }
+    .pillar {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: var(--space-6);
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      transition:
+        transform var(--dur-luxe) var(--ease-luxe),
+        background-color var(--dur-luxe) var(--ease-luxe),
+        border-color var(--dur-luxe) var(--ease-luxe);
+    }
+    .pillar::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--ax-gradient);
+      opacity: 0;
+      mix-blend-mode: overlay;
+      transition: opacity var(--dur-luxe) var(--ease-luxe);
+      z-index: -1;
+      pointer-events: none;
+    }
+    .pillar:hover { transform: translateY(-4px); border-color: var(--border-soft); }
+    .pillar:hover::before { opacity: .08; }
+    .pillar .tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .25em;
+      color: var(--ax-aurora);
+      margin-bottom: var(--space-3);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pillar .tag .num {
+      color: var(--text-faint);
+    }
+    .pillar h3 {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: -.015em;
+      margin-bottom: var(--space-3);
+      line-height: 1.2;
+    }
+    .pillar p {
+      color: var(--text-soft);
+      font-size: 14.5px;
+      line-height: 1.65;
+    }
+    .pillar ul {
+      list-style: none;
+      margin-top: var(--space-4);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .pillar ul li {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--text-mute);
+      letter-spacing: .04em;
+      padding-left: 14px;
+      position: relative;
+    }
+    .pillar ul li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 7px;
+      width: 6px;
+      height: 1px;
+      background: var(--ax-aurora);
+    }
+
+    /* ============================================================
+       PARTNERSHIP PANEL
+       ============================================================ */
+    .partnership-wrap {
+      position: relative;
+      border-radius: var(--r-xl);
+      overflow: hidden;
+      isolation: isolate;
+      padding: clamp(var(--space-7), 6vw, var(--space-9));
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      transition: var(--theme-trans);
+    }
+    .partnership-wrap::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background: var(--ax-gradient);
+      background-size: 220% 220%;
+      animation: ax-drift 14s ease-in-out infinite;
+      opacity: .85;
+      z-index: -2;
+      border-radius: inherit;
+    }
+    .partnership-wrap::after {
+      content: "";
+      position: absolute;
+      inset: 1.5px;
+      background: var(--bg-elevated);
+      border-radius: inherit;
+      z-index: -1;
+      transition: background-color var(--dur-luxe) var(--ease-luxe);
+    }
+    .partnership-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: var(--space-8);
+      align-items: center;
+    }
+    .partnership-grid .label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--ax-aurora);
+      margin-bottom: var(--space-4);
+    }
+    .partnership-grid h3 {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 3.6vw, 44px);
+      font-weight: 500;
+      letter-spacing: -.025em;
+      line-height: 1.08;
+      margin-bottom: var(--space-5);
+    }
+    .partnership-grid p {
+      color: var(--text-soft);
+      font-size: 15.5px;
+      line-height: 1.7;
+      margin-bottom: var(--space-3);
+    }
+    .partnership-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-5);
+    }
+    .partnership-stats .stat {
+      padding: var(--space-5);
+      border-radius: var(--r-md);
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      transition: var(--theme-trans), transform var(--dur-luxe) var(--ease-luxe);
+    }
+    .partnership-stats .stat:hover { transform: translateY(-3px); }
+    .partnership-stats .stat .v {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 500;
+      letter-spacing: -.02em;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .partnership-stats .stat .v.grad { background: var(--ax-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .partnership-stats .stat .l {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--text-mute);
+    }
+    .partnership-grid .actions {
+      margin-top: var(--space-6);
+      display: flex;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+    }
+
+    /* ============================================================
+       3D HERO MARK (Three.js canvas)
+       ============================================================ */
+    .hero-top {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+      gap: var(--space-7);
+      align-items: center;
+    }
+    .hero-content { max-width: 640px; }
+    .hero-stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      max-width: 540px;
+      justify-self: end;
+    }
+    .hero-stage canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: var(--r-xl);
+    }
+    .hero-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(139,63,255,.20), transparent 60%),
+        radial-gradient(circle at 30% 70%, rgba(0,212,255,.16), transparent 55%);
+      filter: blur(50px);
+      pointer-events: none;
+      z-index: 0;
+      animation: halo-drift 18s ease-in-out infinite;
+    }
+    .hero-stage .stage-frame {
+      position: absolute;
+      inset: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      pointer-events: none;
+      z-index: 3;
+      transition: border-color var(--dur-luxe) var(--ease-luxe);
+    }
+    .hero-stage .stage-readout {
+      position: absolute;
+      bottom: var(--space-4);
+      left: var(--space-5);
+      right: var(--space-5);
+      z-index: 4;
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--text-mute);
+      pointer-events: none;
+    }
+    .hero-stage .stage-readout .live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--ax-aurora);
+    }
+    .hero-stage .stage-readout .live::before {
+      content: "";
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--ax-aurora);
+      box-shadow: 0 0 8px var(--ax-aurora);
+      animation: pulse-dot 2.4s ease-in-out infinite;
+    }
+    @media (max-width: 980px) {
+      .hero-top { grid-template-columns: 1fr; }
+      .hero-stage { max-width: 420px; justify-self: center; margin: 0 auto; }
+    }
+    @media (max-width: 540px) {
+      .hero-stage { max-width: 320px; aspect-ratio: 1; }
+    }
+
+    /* ============================================================
+       LOGO CLOUD (tech stack strip)
+       ============================================================ */
+    .stack-strip {
+      padding: var(--space-7) 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      transition: var(--theme-trans);
+      position: relative;
+      z-index: 1;
+    }
+    .stack-strip .stack-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--text-mute);
+      text-align: center;
+      margin-bottom: var(--space-5);
+    }
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: var(--space-5);
+      align-items: center;
+    }
+    .stack-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: var(--space-3);
+      border-radius: var(--r-sm);
+      color: var(--text-mute);
+      transition:
+        color var(--dur-luxe) var(--ease-luxe),
+        background-color var(--dur-luxe) var(--ease-luxe);
+      cursor: default;
+    }
+    .stack-item .mark {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: -.005em;
+      color: var(--text-soft);
+      opacity: .7;
+      transition: opacity var(--dur-luxe) var(--ease-luxe), color var(--dur-luxe) var(--ease-luxe);
+    }
+    .stack-item .role {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      opacity: 0;
+      transform: translateY(2px);
+      transition: opacity var(--dur-luxe) var(--ease-luxe), transform var(--dur-luxe) var(--ease-luxe);
+    }
+    .stack-item:hover .mark { opacity: 1; color: var(--text); }
+    .stack-item:hover .role { opacity: 1; transform: translateY(0); }
+    @media (max-width: 880px) { .stack-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 540px) { .stack-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    /* ============================================================
+       LIVE IMPACT COUNTERS
+       ============================================================ */
+    .counters {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+      margin-top: var(--space-7);
+    }
+    .counter-card {
+      position: relative;
+      padding: var(--space-6);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      isolation: isolate;
+      overflow: hidden;
+      transition:
+        background-color var(--dur-luxe) var(--ease-luxe),
+        border-color var(--dur-luxe) var(--ease-luxe);
+    }
+    .counter-card .v {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 4vw, 52px);
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: -.02em;
+      background: var(--ax-gradient);
+      background-size: 220% 220%;
+      animation: ax-drift 12s ease-in-out infinite;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: var(--space-3);
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .counter-card .v .suffix {
+      font-size: .55em;
+      color: var(--text-mute);
+      -webkit-background-clip: unset;
+      background-clip: unset;
+      background: none;
+      animation: none;
+      font-weight: 400;
+    }
+    .counter-card .l {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--text-mute);
+      line-height: 1.6;
+    }
+    @media (max-width: 880px) { .counters { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 540px) { .counters { grid-template-columns: 1fr; } .counter-card { padding: var(--space-5); } }
+
+    /* ============================================================
+       PARTNERSHIP TIMELINE
+       ============================================================ */
+    .timeline-section {
+      padding: var(--space-9) 0;
+      border-top: 1px solid var(--border);
+      transition: var(--theme-trans);
+    }
+    .timeline {
+      position: relative;
+      margin-top: var(--space-7);
+      padding-top: var(--space-6);
+    }
+    .timeline-rail {
+      position: absolute;
+      top: 28px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--ax-gradient);
+      background-size: 220% 220%;
+      animation: ax-drift 14s ease-in-out infinite;
+      opacity: .8;
+    }
+    .timeline-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--space-4);
+      position: relative;
+    }
+    .timeline-node {
+      position: relative;
+      padding-top: var(--space-7);
+    }
+    .timeline-node::before {
+      content: "";
+      position: absolute;
+      top: 18px;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--ax-aurora);
+      box-shadow: 0 0 0 4px var(--bg), 0 0 16px rgba(0,212,255,.5);
+      transition: transform var(--dur-luxe) var(--ease-luxe), border-color var(--dur-luxe) var(--ease-luxe);
+    }
+    .timeline-node:hover::before {
+      transform: scale(1.2);
+      border-color: var(--ax-magenta);
+    }
+    .timeline-node .year {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .25em;
+      color: var(--ax-aurora);
+      margin-bottom: var(--space-3);
+    }
+    .timeline-node h4 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: -.005em;
+      line-height: 1.25;
+      margin-bottom: var(--space-2);
+      color: var(--text);
+    }
+    .timeline-node p {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-soft);
+    }
+    .timeline-node.is-live::before {
+      background: var(--ax-gradient);
+      border-color: transparent;
+      animation: pulse-dot 2.4s ease-in-out infinite;
+    }
+    @media (max-width: 880px) {
+      .timeline-grid { grid-template-columns: 1fr; gap: var(--space-5); }
+      .timeline-rail { left: 9px; right: auto; top: 0; bottom: 0; width: 1px; height: auto; }
+      .timeline-node { padding-top: 0; padding-left: var(--space-7); }
+      .timeline-node::before { top: 0; left: 0; }
+    }
+
+    /* ============================================================
+       ARCHITECTURE DIAGRAM
+       ============================================================ */
+    .architecture {
+      position: relative;
+      margin-top: var(--space-7);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .arch-layer {
+      position: relative;
+      padding: var(--space-5) var(--space-6);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: var(--space-6);
+      align-items: center;
+      transition:
+        background-color var(--dur-luxe) var(--ease-luxe),
+        border-color var(--dur-luxe) var(--ease-luxe),
+        transform var(--dur-luxe) var(--ease-luxe);
+      isolation: isolate;
+      overflow: hidden;
+    }
+    .arch-layer::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--ax-gradient);
+      background-size: 220% 220%;
+      animation: ax-drift 10s ease-in-out infinite;
+      opacity: .8;
+    }
+    .arch-layer:hover { transform: translateX(2px); border-color: var(--border-soft); }
+    .arch-layer .arch-label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .arch-layer .arch-label .num {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: .25em;
+      color: var(--text-mute);
+      text-transform: uppercase;
+    }
+    .arch-layer .arch-label h4 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: -.005em;
+      color: var(--text);
+    }
+    .arch-layer .arch-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+    .arch-tool {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--r-pill);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .04em;
+      color: var(--text-soft);
+      transition:
+        background-color var(--dur-fast) var(--ease-luxe),
+        border-color var(--dur-fast) var(--ease-luxe),
+        color var(--dur-fast) var(--ease-luxe);
+    }
+    .arch-tool:hover { color: var(--text); border-color: var(--border-soft); background: var(--bg); }
+    .arch-tool .dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--ax-aurora);
+    }
+    .arch-flow {
+      display: flex;
+      justify-content: center;
+      padding: 4px 0;
+      color: var(--ax-voltage);
+      opacity: .7;
+    }
+    @media (max-width: 720px) {
+      .arch-layer { grid-template-columns: 1fr; gap: var(--space-3); }
+    }
+
+    /* ============================================================
+       FEATURED TESTIMONIAL
+       ============================================================ */
+    .testimonial-section {
+      padding: var(--space-9) 0;
+      border-top: 1px solid var(--border);
+      transition: var(--theme-trans);
+    }
+    .testimonial-card {
+      position: relative;
+      padding: clamp(var(--space-7), 6vw, var(--space-9));
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      isolation: isolate;
+      overflow: hidden;
+      transition: var(--theme-trans);
+    }
+    .testimonial-card::before {
+      content: "\201C";
+      position: absolute;
+      top: 8px; left: 24px;
+      font-family: var(--font-display);
+      font-size: 160px;
+      line-height: 1;
+      color: var(--ax-voltage);
+      opacity: .25;
+      pointer-events: none;
+    }
+    .testimonial-card::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--ax-gradient);
+      background-size: 220% 220%;
+      animation: ax-drift 9s ease-in-out infinite;
+    }
+    .testimonial-card blockquote {
+      position: relative;
+      font-family: var(--font-display);
+      font-size: clamp(22px, 2.6vw, 32px);
+      font-weight: 400;
+      line-height: 1.35;
+      letter-spacing: -.015em;
+      color: var(--text);
+      margin: var(--space-7) 0 var(--space-6);
+      max-width: 56ch;
+    }
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .testimonial-author .avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--ax-gradient);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 500;
+      color: white;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .testimonial-author .name {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .testimonial-author .role {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--text-mute);
+      margin-top: 2px;
+    }
+
+    /* ============================================================
+       ARCTIC GREY PROMO BLOCK
+       ============================================================ */
+    .ag-promo {
+      padding: var(--space-9) 0;
+      position: relative;
+      z-index: 1;
+      transition: var(--theme-trans);
+      border-top: 1px solid var(--border);
+    }
+    .ag-promo-card {
+      position: relative;
+      border-radius: var(--r-xl);
+      padding: clamp(var(--space-7), 6vw, var(--space-9));
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      isolation: isolate;
+      transition: var(--theme-trans), border-color var(--dur-luxe) var(--ease-luxe);
+    }
+    .ag-promo-card::before {
+      content: "";
+      position: absolute;
+      top: -45%;
+      right: -15%;
+      width: 70%;
+      aspect-ratio: 1;
+      background:
+        radial-gradient(circle, rgba(255,46,147,.22), transparent 55%),
+        radial-gradient(circle at 70% 70%, rgba(0,212,255,.16), transparent 60%);
+      filter: blur(50px);
+      pointer-events: none;
+      z-index: -1;
+      animation: halo-drift 22s ease-in-out infinite;
+    }
+    .ag-promo-card::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      height: 2px;
+      width: 100%;
+      background: var(--ax-gradient);
+      background-size: 220% 220%;
+      animation: ax-drift 9s ease-in-out infinite;
+      z-index: 1;
+    }
+    .ag-promo-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--ax-magenta);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-5);
+    }
+    .ag-promo-eyebrow .arrow-mark {
+      display: inline-block;
+      width: 22px; height: 1px;
+      background: var(--ax-gradient-edge);
+      flex-shrink: 0;
+    }
+    .ag-promo h3 {
+      font-family: var(--font-display);
+      font-size: clamp(30px, 4.4vw, 52px);
+      font-weight: 500;
+      letter-spacing: -.025em;
+      line-height: 1.05;
+      margin-bottom: var(--space-5);
+      max-width: 22ch;
+    }
+    .ag-promo .lede {
+      color: var(--text-soft);
+      font-size: clamp(15px, 1.3vw, 17px);
+      line-height: 1.7;
+      max-width: 60ch;
+      margin-bottom: var(--space-7);
+    }
+
+    .ag-services {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-3);
+      margin-bottom: var(--space-7);
+    }
+    .ag-service {
+      padding: var(--space-5);
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      transition:
+        background-color var(--dur-luxe) var(--ease-luxe),
+        border-color var(--dur-luxe) var(--ease-luxe),
+        transform var(--dur-luxe) var(--ease-luxe);
+    }
+    .ag-service:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-soft);
+    }
+    .ag-service .ag-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--r-sm);
+      background: linear-gradient(135deg, rgba(255,46,147,.16), rgba(139,63,255,.16));
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ax-magenta);
+      transition: color var(--dur-luxe) var(--ease-luxe);
+    }
+    .ag-service:hover .ag-icon { color: var(--ax-aurora); }
+    .ag-service h4 {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: -.005em;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .ag-service p {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--text-soft);
+    }
+
+    .ag-promo-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-5);
+      flex-wrap: wrap;
+    }
+    .ag-promo-actions .meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--text-mute);
+    }
+
+    /* ============================================================
+       NOW BUILDING
+       ============================================================ */
+    .now-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--space-4);
+      margin-top: var(--space-6);
+    }
+    .now-card {
+      padding: var(--space-5);
+      border-radius: var(--r-md);
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      transition: var(--theme-trans), transform var(--dur-luxe) var(--ease-luxe), border-color var(--dur-luxe) var(--ease-luxe);
+    }
+    .now-card:hover { transform: translateY(-3px); border-color: var(--border-soft); }
+    .now-card .icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--r-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(0,212,255,.12), rgba(139,63,255,.12));
+      border: 1px solid var(--border);
+      margin-bottom: var(--space-4);
+      color: var(--ax-aurora);
+    }
+    .now-card h4 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: -.005em;
+      margin-bottom: 6px;
+    }
+    .now-card p {
+      color: var(--text-soft);
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+
+    /* ============================================================
+       HOW WE WORK
+       ============================================================ */
+    .how-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: var(--space-5);
+      margin-top: var(--space-5);
+    }
+    .how-step {
+      padding: var(--space-6) 0;
+      border-top: 1px solid var(--border);
+      position: relative;
+      transition: var(--theme-trans);
+    }
+    .how-step .num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .3em;
+      color: var(--ax-aurora);
+      margin-bottom: var(--space-3);
+    }
+    .how-step h4 {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 500;
+      letter-spacing: -.015em;
+      margin-bottom: var(--space-3);
+    }
+    .how-step p {
+      color: var(--text-soft);
+      font-size: 14.5px;
+      line-height: 1.65;
+      max-width: 38ch;
+    }
+
+    /* ============================================================
+       CONTACT
+       ============================================================ */
+    .contact {
+      padding: var(--space-10) 0;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      transition: var(--theme-trans);
+    }
+    .contact h2 {
+      max-width: 18ch;
+      margin: var(--space-5) auto var(--space-5);
+    }
+    .contact p {
+      color: var(--text-soft);
+      max-width: 52ch;
+      margin: 0 auto var(--space-7);
+    }
+    .contact .cta-row { display: inline-flex; gap: var(--space-3); flex-wrap: wrap; justify-content: center; }
+
+    /* ============================================================
+       SITE FOOTER (v3 design system)
+       ============================================================ */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: var(--space-8) 0 var(--space-7);
+      color: var(--text-mute);
+      font-size: 13px;
+      transition: var(--theme-trans);
+      position: relative;
+      z-index: 1;
+    }
+    .footer-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 var(--space-5);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: var(--space-7);
+      padding-bottom: var(--space-7);
+      border-bottom: 1px solid var(--border);
+    }
+    .footer-brand img { height: 30px; width: auto; margin-bottom: var(--space-4); }
+    .footer-brand .light-only { display: none; }
+    [data-theme="light"] .footer-brand .dark-only { display: none; }
+    [data-theme="light"] .footer-brand .light-only { display: block; }
+    .footer-brand p {
+      color: var(--text-soft);
+      font-size: 13px;
+      max-width: 32ch;
+      line-height: 1.6;
+    }
+    .footer-col h4 {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .25em;
+      color: var(--text-mute);
+      font-weight: 500;
+      margin-bottom: var(--space-4);
+    }
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer-col ul a {
+      font-size: 14px;
+      color: var(--text-soft);
+      transition: color var(--dur-fast) var(--ease-out);
+    }
+    .footer-col ul a:hover { color: var(--text); }
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: var(--space-5);
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-mute);
+      letter-spacing: .04em;
+    }
+    .footer-bottom a { transition: color var(--dur-fast) var(--ease-out); }
+    .footer-bottom a:hover { color: var(--text); }
+    @media (max-width: 720px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: var(--space-6); }
+      .footer-brand { grid-column: 1 / -1; }
+    }
+    @media (max-width: 540px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-brand { grid-column: auto; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 900px) {
+      .partnership-grid { grid-template-columns: 1fr; gap: var(--space-7); }
+    }
+    @media (max-width: 880px) {
+      .nav-desktop { display: none; }
+      .header-actions .btn { display: none; }
+      .hamburger { display: inline-flex; }
+    }
+    @media (max-width: 900px) {
+      .ag-services { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 720px) {
+      /* Tighter section rhythm on tablet/mobile */
+      .section { padding: var(--space-8) 0; }
+      .ag-promo { padding: var(--space-8) 0; }
+      .ag-promo-card { padding: var(--space-7) var(--space-5); }
+      .section h2 { margin: var(--space-4) 0 var(--space-6); }
+      .hero { padding: clamp(72px, 16vw, 120px) 0 var(--space-8); }
+      .hero h1 { font-size: clamp(44px, 11.5vw, 88px); letter-spacing: -.04em; }
+      .hero p { font-size: 16px; margin-bottom: var(--space-6); }
+      .hero-meta { margin-top: var(--space-7); padding-top: var(--space-6); }
+      .partnership-stats { grid-template-columns: 1fr 1fr; }
+      .partnership-wrap { padding: var(--space-7) var(--space-5); }
+      .partnership-grid h3 { font-size: clamp(26px, 6.5vw, 36px); }
+      .pillar { padding: var(--space-5); }
+      .now-card { padding: var(--space-4); }
+      .how-step { padding: var(--space-5) 0; }
+      .contact { padding: var(--space-9) 0; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: var(--space-3); }
+    }
+    @media (max-width: 540px) {
+      :root { /* tighten gutter on phones */ }
+      .container { padding: 0 var(--space-4); }
+      .header-inner { padding: 0 var(--space-4); gap: var(--space-3); }
+      .footer-inner { padding: 0 var(--space-4); }
+      .ag-services { grid-template-columns: 1fr; gap: var(--space-2); }
+      .ag-service { padding: var(--space-4); }
+      .ag-promo-actions .btn { width: 100%; }
+      .hero h1 { font-size: clamp(40px, 12vw, 72px); }
+      .hero .cta-row { flex-direction: column; align-items: stretch; }
+      .hero .cta-row .btn { width: 100%; }
+      .contact .cta-row { display: flex; flex-direction: column; }
+      .contact .cta-row .btn { width: 100%; }
+      .partnership-stats { grid-template-columns: 1fr; gap: var(--space-3); }
+      .partnership-stats .stat { padding: var(--space-4); }
+      .partnership-stats .stat .v { font-size: 28px; }
+      .partnership-grid .actions .btn { width: 100%; }
+      .hero-meta { gap: var(--space-2); }
+      .hero-meta .item { padding: var(--space-4); }
+      .hero-meta .item .value { font-size: 18px; }
+      .pillar h3 { font-size: 21px; }
+      .how-step h4 { font-size: 22px; }
+      .footer-links { flex-wrap: wrap; gap: var(--space-3); }
+    }
+    @media (max-width: 380px) {
+      .hero h1 { font-size: 38px; }
+      .section h2 { font-size: 28px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .reveal { opacity: 1 !important; transform: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Scroll progress (top-of-page gradient bar) -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- Shared SVG gradient (used by every shape morph) -->
+  <svg width="0" height="0" style="position: absolute;" aria-hidden="true">
+    <defs>
+      <linearGradient id="shapeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#00D4FF"/>
+        <stop offset="22%"  stop-color="#1E40FF"/>
+        <stop offset="50%"  stop-color="#8B3FFF"/>
+        <stop offset="78%"  stop-color="#FF2E93"/>
+        <stop offset="100%" stop-color="#FF8A3D"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- TOC dots (sticky right rail navigator, desktop ≥1100px) -->
+  <nav class="toc" aria-label="Section navigation">
+    <a href="#top" title="Hero"></a>
+    <a href="#what-we-build" title="What we build"></a>
+    <a href="#architecture" title="Architecture"></a>
+    <a href="#partnership" title="Partnership"></a>
+    <a href="#timeline" title="Timeline"></a>
+    <a href="#testimonial" title="Testimonial"></a>
+    <a href="#arctic-grey" title="Arctic Grey"></a>
+    <a href="#now" title="Right now"></a>
+    <a href="#how" title="How we work"></a>
+    <a href="#contact" title="Contact"></a>
+  </nav>
+
+  <div class="bg-halo" aria-hidden="true"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="#top" class="logo" aria-label="Axe Tech home">
+        <img class="dark-only" src="assets/axetech-horizontal-dark.png" alt="Axe Tech" />
+        <img class="light-only" src="assets/axetech-horizontal-color.png" alt="Axe Tech" />
+      </a>
+
+      <nav class="nav-desktop" aria-label="Primary">
+        <a href="#what-we-build">What we build</a>
+        <a href="#partnership">Partnership</a>
+        <a href="#now">Right now</a>
+        <a href="#how">How we work</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+          </svg>
+        </button>
+
+        <a href="mailto:support@axetech.io" class="btn">
+          Get in touch <span class="arrow">→</span>
+        </a>
+
+        <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="drawer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer (design system v3) -->
+  <div class="mobile-drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Site navigation" aria-hidden="true">
+    <div class="drawer-head">
+      <a href="#top" class="logo" data-close aria-label="Axe Tech home">
+        <img class="dark-only" src="assets/axetech-horizontal-dark.png" alt="Axe Tech" />
+        <img class="light-only" src="assets/axetech-horizontal-color.png" alt="Axe Tech" />
+      </a>
+      <button class="hamburger" id="closeDrawer" aria-label="Close menu" style="display: inline-flex;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="drawer-section">
+      <div class="drawer-section-label">Explore</div>
+      <nav>
+        <a href="#what-we-build" data-close class="drawer-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" />
+            <rect x="14" y="3" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" />
+            <rect x="3" y="14" width="7" height="7" />
+          </svg>
+          What we build
+        </a>
+        <a href="#partnership" data-close class="drawer-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+          </svg>
+          Partnership
+        </a>
+        <a href="#now" data-close class="drawer-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+          </svg>
+          Right now
+        </a>
+        <a href="#how" data-close class="drawer-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
+          How we work
+        </a>
+      </nav>
+    </div>
+
+    <div class="drawer-section">
+      <div class="drawer-section-label">Connect</div>
+      <nav>
+        <a href="#contact" data-close class="drawer-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+            <polyline points="22,6 12,13 2,6" />
+          </svg>
+          Contact
+        </a>
+        <a href="https://arcticgrey.com" target="_blank" rel="noopener" class="drawer-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            <polyline points="15 3 21 3 21 9" />
+            <line x1="10" y1="14" x2="21" y2="3" />
+          </svg>
+          Arctic Grey
+          <span class="ext">↗</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="drawer-cta">
+      <a href="mailto:support@axetech.io" class="btn">
+        support@axetech.io <span class="arrow">→</span>
+      </a>
+    </div>
+
+    <div class="drawer-foot-meta">
+      <span>© 2026 Axe Tech</span>
+      <span>Cutting Edge</span>
+    </div>
+  </div>
+
+  <main id="main" tabindex="-1">
+
+  <!-- Hero — ambient shape morph + reveal H1 -->
+  <section class="hero" id="top">
+    <!-- Three ambient shape SVGs drifting in the periphery (DS spec: max 3 per viewport) -->
+    <svg class="shape-bg" style="top: 8%; left: -80px; width: 240px; height: 240px;" viewBox="-100 -100 200 200" aria-hidden="true">
+      <polygon class="shape-stroke" data-ambient="0" points=""></polygon>
+    </svg>
+    <svg class="shape-bg" style="top: 24%; right: -60px; width: 200px; height: 200px;" viewBox="-100 -100 200 200" aria-hidden="true">
+      <polygon class="shape-stroke" data-ambient="1" points=""></polygon>
+    </svg>
+    <svg class="shape-bg" style="bottom: 10%; left: 56%; width: 180px; height: 180px;" viewBox="-100 -100 200 200" aria-hidden="true">
+      <polygon class="shape-stroke" data-ambient="2" points=""></polygon>
+    </svg>
+
+    <div class="container">
+      <div class="hero-top">
+        <div class="hero-content">
+          <div class="eyebrow reveal"><span class="dot"></span> AXE TECH · CUTTING EDGE TECHNOLOGY</div>
+          <h1 class="reveal delay-1">
+            <span class="reveal-text">Cutting <span class="text-grad">Edge</span></span><br />
+            <span class="reveal-text" style="animation-delay: 200ms;">by design.</span>
+          </h1>
+          <p class="reveal delay-2">
+            Axe Tech builds the technology ambitious companies run on. AI systems, custom software, and deep operations support, designed to compound over years rather than quarters.
+          </p>
+          <div class="cta-row reveal delay-3">
+            <a href="mailto:support@axetech.io" class="btn btn-primary" id="primaryCta">
+              <span class="strike-line"></span>
+              Start a conversation <span class="arrow">→</span>
+            </a>
+            <a href="#what-we-build" class="btn btn-secondary">What we build <span class="arrow">→</span></a>
+          </div>
+        </div>
+
+        <!-- 3D HERO MARK STAGE -->
+        <div class="hero-stage reveal delay-2" id="heroStage" aria-hidden="true">
+          <canvas id="heroCanvas"></canvas>
+          <div class="stage-frame"></div>
+          <div class="stage-readout">
+            <span>AXE TECH · MARK v3</span>
+            <span class="live">RENDERING</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-meta reveal delay-4">
+        <div class="item sharpen">
+          <span class="label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 21h18" />
+              <path d="M5 21V7l8-4v18" />
+              <path d="M19 21V11l-6-4" />
+            </svg>
+            Founded
+          </span>
+          <span class="value">Axe Tech Limited</span>
+        </div>
+        <div class="item">
+          <span class="label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+            </svg>
+            Anchor partnership
+          </span>
+          <span class="value">Arctic Grey · since 2015</span>
+        </div>
+        <div class="item">
+          <span class="label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+            Current focus
+          </span>
+          <span class="value">AI for modern business</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech stack strip -->
+  <section class="stack-strip" aria-label="Technology stack">
+    <div class="container">
+      <div class="stack-label reveal">BUILT ON · THE TOOLS WE RUN AT THE EDGE</div>
+      <div class="stack-grid reveal delay-1">
+        <div class="stack-item"><span class="mark">Claude</span><span class="role">Reasoning</span></div>
+        <div class="stack-item"><span class="mark">OpenAI</span><span class="role">Models</span></div>
+        <div class="stack-item"><span class="mark">Cursor</span><span class="role">Codegen</span></div>
+        <div class="stack-item"><span class="mark">n8n</span><span class="role">Workflows</span></div>
+        <div class="stack-item"><span class="mark">Next.js</span><span class="role">Frontend</span></div>
+        <div class="stack-item"><span class="mark">Vercel</span><span class="role">Edge runtime</span></div>
+        <div class="stack-item"><span class="mark">Cloudflare</span><span class="role">Infra</span></div>
+        <div class="stack-item"><span class="mark">Stripe</span><span class="role">Payments</span></div>
+        <div class="stack-item"><span class="mark">Linear</span><span class="role">Build ops</span></div>
+        <div class="stack-item"><span class="mark">Shopify</span><span class="role">Commerce</span></div>
+        <div class="stack-item"><span class="mark">Klaviyo</span><span class="role">Lifecycle</span></div>
+        <div class="stack-item"><span class="mark">Slack</span><span class="role">Operations</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What we build -->
+  <section class="section" id="what-we-build">
+    <div class="container">
+      <div class="section-meta reveal">
+        <span class="num">01</span><span class="bar"></span><span class="label">What we build</span>
+      </div>
+      <h2 class="reveal delay-1">Three layers. One operating principle.</h2>
+      <p class="lede reveal delay-2">
+        We build technology that gives a business a real, measurable edge. Every layer is designed to compound, so the system you ship this quarter is making the next one cheaper to ship a year from now.
+      </p>
+
+      <div class="pillar-grid">
+        <article class="pillar sharpen reveal delay-1">
+          <div class="tag"><span class="num">01</span> AI SYSTEMS</div>
+          <h3>Make every team faster.</h3>
+          <p>Custom agents, copilots, and automations that pay for themselves inside a quarter. We design for measurable lift, not novelty.</p>
+          <ul>
+            <li>Agent platforms</li>
+            <li>Internal copilots</li>
+            <li>Workflow automation</li>
+          </ul>
+        </article>
+        <article class="pillar sharpen reveal delay-2">
+          <div class="tag"><span class="num">02</span> CUTTING EDGE TECH</div>
+          <h3>Build what off-the-shelf cannot.</h3>
+          <p>Bespoke software, integrations, and infrastructure for the work your stack was never meant to handle. Engineered for the long run.</p>
+          <ul>
+            <li>Custom platforms</li>
+            <li>Data &amp; integrations</li>
+            <li>Infra &amp; tooling</li>
+          </ul>
+        </article>
+        <article class="pillar sharpen reveal delay-3">
+          <div class="tag"><span class="num">03</span> OPERATIONS SUPPORT</div>
+          <h3>Stay sharp, year after year.</h3>
+          <p>Long-running technology partnerships. We embed with the team, own the outcome end-to-end, and keep the system improving while the business grows.</p>
+          <ul>
+            <li>Embedded engineering</li>
+            <li>Systems strategy</li>
+            <li>Continuous improvement</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture diagram -->
+  <section class="section" id="architecture">
+    <div class="container">
+      <div class="section-meta reveal">
+        <span class="num">01b</span><span class="bar"></span><span class="label">The system we build</span>
+      </div>
+      <h2 class="reveal delay-1">Five layers. One <span class="text-grad">intelligent stack</span>.</h2>
+      <p class="lede reveal delay-2">
+        A real Axe Tech engagement looks like this: every layer earns its place, every layer compounds the next.
+      </p>
+
+      <div class="architecture reveal delay-3">
+        <div class="arch-layer">
+          <div class="arch-label">
+            <span class="num">05 / OUTCOMES</span>
+            <h4>Compounding output.</h4>
+          </div>
+          <div class="arch-tools">
+            <span class="arch-tool"><span class="dot"></span>Faster operations</span>
+            <span class="arch-tool"><span class="dot"></span>Better client work</span>
+            <span class="arch-tool"><span class="dot"></span>More capacity, no headcount</span>
+            <span class="arch-tool"><span class="dot"></span>Platinum trajectory</span>
+          </div>
+        </div>
+        <div class="arch-flow" aria-hidden="true">
+          <svg width="14" height="20" viewBox="0 0 14 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v12M3 12l4 4 4-4" /></svg>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-label">
+            <span class="num">04 / AGENTS &amp; COPILOTS</span>
+            <h4>Intelligence layer.</h4>
+          </div>
+          <div class="arch-tools">
+            <span class="arch-tool"><span class="dot"></span>Claude</span>
+            <span class="arch-tool"><span class="dot"></span>OpenAI</span>
+            <span class="arch-tool"><span class="dot"></span>Custom agents</span>
+            <span class="arch-tool"><span class="dot"></span>Internal copilots</span>
+            <span class="arch-tool"><span class="dot"></span>Workflow automation</span>
+          </div>
+        </div>
+        <div class="arch-flow" aria-hidden="true">
+          <svg width="14" height="20" viewBox="0 0 14 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v12M3 12l4 4 4-4" /></svg>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-label">
+            <span class="num">03 / KNOWLEDGE</span>
+            <h4>Indexed memory.</h4>
+          </div>
+          <div class="arch-tools">
+            <span class="arch-tool"><span class="dot"></span>Vector store</span>
+            <span class="arch-tool"><span class="dot"></span>Embeddings</span>
+            <span class="arch-tool"><span class="dot"></span>Retrieval</span>
+            <span class="arch-tool"><span class="dot"></span>Single source of truth</span>
+          </div>
+        </div>
+        <div class="arch-flow" aria-hidden="true">
+          <svg width="14" height="20" viewBox="0 0 14 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v12M3 12l4 4 4-4" /></svg>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-label">
+            <span class="num">02 / INTEGRATION</span>
+            <h4>Wires through everything.</h4>
+          </div>
+          <div class="arch-tools">
+            <span class="arch-tool"><span class="dot"></span>n8n</span>
+            <span class="arch-tool"><span class="dot"></span>Zapier</span>
+            <span class="arch-tool"><span class="dot"></span>Custom APIs</span>
+            <span class="arch-tool"><span class="dot"></span>Webhooks</span>
+            <span class="arch-tool"><span class="dot"></span>Event bus</span>
+          </div>
+        </div>
+        <div class="arch-flow" aria-hidden="true">
+          <svg width="14" height="20" viewBox="0 0 14 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v12M3 12l4 4 4-4" /></svg>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-label">
+            <span class="num">01 / DATA FOUNDATION</span>
+            <h4>Where the truth lives.</h4>
+          </div>
+          <div class="arch-tools">
+            <span class="arch-tool"><span class="dot"></span>Shopify</span>
+            <span class="arch-tool"><span class="dot"></span>Klaviyo</span>
+            <span class="arch-tool"><span class="dot"></span>Slack</span>
+            <span class="arch-tool"><span class="dot"></span>Drive</span>
+            <span class="arch-tool"><span class="dot"></span>Monday</span>
+            <span class="arch-tool"><span class="dot"></span>GA4</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Partnership -->
+  <section class="section" id="partnership">
+    <div class="container">
+      <div class="section-meta reveal">
+        <span class="num">02</span><span class="bar"></span><span class="label">Long-running partnership</span>
+      </div>
+      <h2 class="reveal delay-1">Eleven years with <span class="text-grad">Arctic Grey</span>.</h2>
+
+      <div class="partnership-wrap reveal delay-2">
+        <div class="partnership-grid">
+          <div>
+            <div class="label">EXCLUSIVE TECH PARTNER · SINCE 2015</div>
+            <h3>The cutting edge engine behind Arctic Grey.</h3>
+            <p>
+              Axe Tech has partnered with Arctic Grey since 2015, supporting their operations, internal systems, and the technology that powers every client engagement.
+            </p>
+            <p>
+              Today we are building the AI layer that drives Arctic Grey toward Shopify Platinum Partner Status and into a global era of growth. Every system we ship inside Arctic Grey is designed to make their team faster, their clients better served, and their future easier to scale.
+            </p>
+            <div class="actions">
+              <a href="https://arcticgrey.com" target="_blank" rel="noopener" class="btn btn-primary">Visit Arctic Grey <span class="arrow">→</span></a>
+            </div>
+          </div>
+          <div class="partnership-stats">
+            <div class="stat">
+              <div class="v grad">2015</div>
+              <div class="l">Partnership Started</div>
+            </div>
+            <div class="stat">
+              <div class="v">11<span style="opacity:.5">yrs</span></div>
+              <div class="l">Building Together</div>
+            </div>
+            <div class="stat">
+              <div class="v grad">Platinum</div>
+              <div class="l">Status Target</div>
+            </div>
+            <div class="stat">
+              <div class="v">Global</div>
+              <div class="l">Growth Horizon</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live impact counters -->
+      <div class="counters reveal" id="counters">
+        <div class="counter-card sharpen">
+          <div class="v" data-count="12400" data-suffix="+">0<span class="suffix">+</span></div>
+          <div class="l">Hours of operations<br />work automated · 2026</div>
+        </div>
+        <div class="counter-card sharpen">
+          <div class="v" data-count="47">0</div>
+          <div class="l">Active AI agents<br />in production</div>
+        </div>
+        <div class="counter-card sharpen">
+          <div class="v" data-count="9">0</div>
+          <div class="l">Internal systems<br />shipped this year</div>
+        </div>
+        <div class="counter-card sharpen">
+          <div class="v" data-count="30" data-suffix="%">0<span class="suffix">%</span></div>
+          <div class="l">Operations capacity<br />unlocked for AG</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Partnership timeline -->
+  <section class="timeline-section" id="timeline">
+    <div class="container">
+      <div class="section-meta reveal">
+        <span class="num">02b</span><span class="bar"></span><span class="label">The eleven-year arc</span>
+      </div>
+      <h2 class="reveal delay-1">From operations support to <span class="text-grad">Platinum trajectory</span>.</h2>
+      <p class="lede reveal delay-2">
+        A partnership that started with operations work in 2015 and now drives the AI layer powering every Arctic Grey engagement. Five inflection points across eleven years.
+      </p>
+
+      <div class="timeline reveal delay-3">
+        <div class="timeline-rail" aria-hidden="true"></div>
+        <div class="timeline-grid">
+          <div class="timeline-node">
+            <div class="year">2015</div>
+            <h4>Partnership begins.</h4>
+            <p>Axe Tech starts supporting Arctic Grey operations and internal systems. First custom tooling ships in week three.</p>
+          </div>
+          <div class="timeline-node">
+            <div class="year">2018</div>
+            <h4>Platform infrastructure.</h4>
+            <p>Internal platforms come online. The deployment system that runs every AG client engagement is built end to end.</p>
+          </div>
+          <div class="timeline-node">
+            <div class="year">2022</div>
+            <h4>Scale and integrations.</h4>
+            <p>The integration layer ships. Shopify, Klaviyo, Slack, and Drive flow through one indexed memory across the agency.</p>
+          </div>
+          <div class="timeline-node">
+            <div class="year">2024</div>
+            <h4>AI layer launches.</h4>
+            <p>First production agents go live inside Arctic Grey. Operations work compounds rather than adding linear headcount.</p>
+          </div>
+          <div class="timeline-node is-live">
+            <div class="year">2026</div>
+            <h4>Platinum trajectory.</h4>
+            <p>Axe Tech's AI systems drive Arctic Grey toward Shopify Platinum Partner Status and a global era of growth.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured testimonial -->
+  <section class="testimonial-section" id="testimonial">
+    <div class="container">
+      <div class="testimonial-card reveal">
+        <blockquote>
+          Axe Tech is the reason every Arctic Grey client gets the cutting edge stack on day one. The systems compound. The team gets faster every quarter. We are not adding people to scale, we are adding intelligence.
+        </blockquote>
+        <div class="testimonial-author">
+          <div class="avatar">AS</div>
+          <div>
+            <div class="name">Anthony Spallone</div>
+            <div class="role">Co-Founder · Arctic Grey</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Arctic Grey promotional block -->
+  <section class="ag-promo" id="arctic-grey">
+    <div class="container">
+      <div class="ag-promo-card reveal">
+        <div class="ag-promo-eyebrow">
+          <span class="arrow-mark"></span>
+          ARCTIC GREY · SHOPIFY &amp; GROWTH PARTNER
+        </div>
+        <h3>For eCommerce, work with <span class="text-grad">Arctic Grey</span> directly.</h3>
+        <p class="lede">
+          Arctic Grey is the operating partner Axe Tech has been building with since 2015. They run Shopify Plus development, conversion-rate optimization, lifecycle email, paid media, SEO, and brand design for ambitious DTC companies. If your roadmap is eCommerce, start there.
+        </p>
+
+        <div class="ag-services">
+          <div class="ag-service sharpen">
+            <div class="ag-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="9" cy="21" r="1" />
+                <circle cx="20" cy="21" r="1" />
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+              </svg>
+            </div>
+            <h4>Shopify Plus</h4>
+            <p>Headless storefronts and platform engineering on Shopify Plus.</p>
+          </div>
+          <div class="ag-service sharpen">
+            <div class="ag-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+              </svg>
+            </div>
+            <h4>CRO</h4>
+            <p>Conversion-rate optimization grounded in real session and revenue data.</p>
+          </div>
+          <div class="ag-service sharpen">
+            <div class="ag-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+            </div>
+            <h4>Lifecycle Email</h4>
+            <p>Klaviyo flows that lift LTV without burning the list.</p>
+          </div>
+          <div class="ag-service sharpen">
+            <div class="ag-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" />
+                <circle cx="12" cy="12" r="6" />
+                <circle cx="12" cy="12" r="2" />
+              </svg>
+            </div>
+            <h4>Paid Media</h4>
+            <p>Performance creative and paid acquisition across Meta, Google, and TikTok.</p>
+          </div>
+          <div class="ag-service sharpen">
+            <div class="ag-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </div>
+            <h4>SEO</h4>
+            <p>Technical SEO and content systems built to compound for years.</p>
+          </div>
+          <div class="ag-service sharpen">
+            <div class="ag-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="13.5" cy="6.5" r="2.5" />
+                <circle cx="19" cy="13" r="2.5" />
+                <circle cx="6" cy="12" r="2.5" />
+                <circle cx="10" cy="20" r="2.5" />
+                <path d="M12 22a10 10 0 1 1 10-10c0 1.66-1.34 3-3 3h-2a2 2 0 0 0-1 3.75A1.3 1.3 0 0 1 15 21a3 3 0 0 1-3 1z" />
+              </svg>
+            </div>
+            <h4>Brand &amp; Design</h4>
+            <p>Visual identity, art direction, and product imagery for premium brands.</p>
+          </div>
+        </div>
+
+        <div class="ag-promo-actions">
+          <a href="https://arcticgrey.com" target="_blank" rel="noopener" class="btn btn-primary">
+            Visit arcticgrey.com <span class="arrow">→</span>
+          </a>
+          <span class="meta">Shopify · CRO · Email · Paid · SEO · Design</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Right now -->
+  <section class="section" id="now">
+    <div class="container">
+      <div class="section-meta reveal">
+        <span class="num">03</span><span class="bar"></span><span class="label">What we're building now</span>
+      </div>
+      <h2 class="reveal delay-1">AI that supercharges entire companies.</h2>
+      <p class="lede reveal delay-2">
+        Right now Axe Tech is focused on helping businesses use AI to compound output across every function. We are doing this for Arctic Grey today, building internal systems that let their team deliver the most cutting edge technology stack to every client they serve.
+      </p>
+
+      <div class="now-grid">
+        <div class="now-card sharpen reveal delay-1">
+          <div class="icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
+          </div>
+          <h4>Agent systems</h4>
+          <p>Specialist agents that take real work off the team and run it on a schedule.</p>
+        </div>
+        <div class="now-card sharpen reveal delay-2">
+          <div class="icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <path d="M3 9h18M9 21V9" />
+            </svg>
+          </div>
+          <h4>Internal AI tools</h4>
+          <p>Copilots and dashboards that put the right answer in front of the right person, fast.</p>
+        </div>
+        <div class="now-card sharpen reveal delay-3">
+          <div class="icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+            </svg>
+          </div>
+          <h4>Workflow automation</h4>
+          <p>Long chains of work, stitched together and audited, so nothing slips through the cracks.</p>
+        </div>
+        <div class="now-card sharpen reveal delay-4">
+          <div class="icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" />
+              <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
+            </svg>
+          </div>
+          <h4>Knowledge layer</h4>
+          <p>A single, well-indexed memory across every tool a company runs, so AI can act on the truth.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How we work -->
+  <section class="section" id="how">
+    <div class="container">
+      <div class="section-meta reveal">
+        <span class="num">04</span><span class="bar"></span><span class="label">How we work</span>
+      </div>
+      <h2 class="reveal delay-1">Build. Ship. Compound.</h2>
+      <p class="lede reveal delay-2">
+        We sit with the team, learn the work, and ship something useful inside the first week. Then we keep going.
+      </p>
+
+      <div class="how-list">
+        <div class="how-step reveal delay-1">
+          <div class="num">01 / LISTEN</div>
+          <h4>Sit with the work.</h4>
+          <p>We learn how the team actually operates before we touch the keyboard. The problems worth solving rarely match the brief.</p>
+        </div>
+        <div class="how-step reveal delay-2">
+          <div class="num">02 / BUILD</div>
+          <h4>Tight loops, real users.</h4>
+          <p>Working systems land in production fast. Real feedback from real people drives every next step.</p>
+        </div>
+        <div class="how-step reveal delay-3">
+          <div class="num">03 / COMPOUND</div>
+          <h4>Every system makes the next one cheaper.</h4>
+          <p>We design for reuse, so the platform we ship today becomes the foundation for everything that follows.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="eyebrow reveal" style="justify-content:center;"><span class="dot"></span> LET'S BUILD</div>
+      <h2 class="reveal delay-1">Let's build something <span class="text-grad">cutting edge</span>.</h2>
+      <p class="reveal delay-2">
+        Tell us what you are trying to ship. We will tell you whether we can help, and what we would do first.
+      </p>
+      <div class="cta-row reveal delay-3">
+        <a href="mailto:support@axetech.io" class="btn btn-primary">support@axetech.io <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  </main>
+
+  <!-- Footer (v3 design system: 3-column site footer) -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img class="dark-only" src="assets/axetech-horizontal-dark.png" alt="Axe Tech" />
+          <img class="light-only" src="assets/axetech-horizontal-color.png" alt="Axe Tech" />
+          <p>Cutting edge technology for ambitious companies. Built by engineers, refined for the boardroom.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="#what-we-build">What we build</a></li>
+            <li><a href="#partnership">Partnership</a></li>
+            <li><a href="#now">Right now</a></li>
+            <li><a href="#how">How we work</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="mailto:support@axetech.io">support@axetech.io</a></li>
+            <li><a href="https://www.axetech.io">www.axetech.io</a></li>
+            <li><a href="#contact">Start a conversation</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Axe Tech Limited · Cutting Edge</span>
+        <span>Design system v3 · 2026.04</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ============================================================
+    // THEME TOGGLE (with persistence + system preference)
+    // ============================================================
+    (function () {
+      const root = document.documentElement;
+      const toggle = document.getElementById('theme-toggle');
+      const stored = (function(){ try { return localStorage.getItem('axetech-theme'); } catch(e) { return null; } })();
+      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initial = stored || (systemDark ? 'dark' : 'light');
+      root.setAttribute('data-theme', initial);
+
+      toggle.addEventListener('click', () => {
+        const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('axetech-theme', next); } catch (e) {}
+      });
+    })();
+
+    // ============================================================
+    // HAMBURGER + DRAWER (design system v3)
+    // ============================================================
+    (function () {
+      const body = document.body;
+      const ham = document.getElementById('hamburger');
+      const drawer = document.getElementById('drawer');
+      const closeBtn = document.getElementById('closeDrawer');
+      const closers = drawer.querySelectorAll('[data-close]');
+
+      function open() {
+        drawer.classList.add('open');
+        body.classList.add('drawer-open');
+        ham.setAttribute('aria-expanded', 'true');
+        drawer.setAttribute('aria-hidden', 'false');
+      }
+      function close() {
+        drawer.classList.remove('open');
+        body.classList.remove('drawer-open');
+        ham.setAttribute('aria-expanded', 'false');
+        drawer.setAttribute('aria-hidden', 'true');
+      }
+      ham.addEventListener('click', open);
+      closeBtn.addEventListener('click', close);
+      closers.forEach(a => a.addEventListener('click', close));
+      window.addEventListener('keydown', e => { if (e.key === 'Escape' && drawer.classList.contains('open')) close(); });
+    })();
+
+    // ============================================================
+    // SCROLL-SPY for drawer + desktop nav + TOC dots
+    // ============================================================
+    (function () {
+      const sectionIds = ['top', 'what-we-build', 'architecture', 'partnership', 'timeline', 'testimonial', 'arctic-grey', 'now', 'how', 'contact'];
+      const drawerLinks = document.querySelectorAll('.mobile-drawer .drawer-link');
+      const desktopLinks = document.querySelectorAll('.nav-desktop a');
+      const tocLinks = document.querySelectorAll('.toc a');
+
+      function setActive(id) {
+        drawerLinks.forEach(a => {
+          const href = a.getAttribute('href');
+          a.classList.toggle('active', href === '#' + id);
+        });
+        desktopLinks.forEach(a => {
+          const href = a.getAttribute('href');
+          a.classList.toggle('is-active', href === '#' + id);
+        });
+        tocLinks.forEach(a => {
+          const href = a.getAttribute('href');
+          a.classList.toggle('active', href === '#' + id);
+        });
+      }
+
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+
+      sectionIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) io.observe(el);
+      });
+    })();
+
+    // ============================================================
+    // SCROLL REVEAL
+    // ============================================================
+    (function () {
+      const els = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        els.forEach(el => el.classList.add('is-visible'));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { rootMargin: '0px 0px -10% 0px', threshold: 0.08 });
+      els.forEach(el => io.observe(el));
+    })();
+
+    // ============================================================
+    // STRIKE signature moment (gradient hairline scribes on commit)
+    // ============================================================
+    (function () {
+      const cta = document.getElementById('primaryCta');
+      if (!cta) return;
+      cta.addEventListener('click', () => {
+        cta.classList.remove('striking');
+        void cta.offsetWidth; // force reflow
+        cta.classList.add('striking');
+      });
+    })();
+
+    // ============================================================
+    // LIVE IMPACT COUNTERS (animate up on scroll-into-view)
+    // ============================================================
+    (function () {
+      const counters = document.querySelectorAll('.counter-card .v[data-count]');
+      if (!counters.length) return;
+
+      function format(n) {
+        // Add thousands separator for numbers >= 1000
+        return n >= 1000 ? n.toLocaleString('en-US') : String(n);
+      }
+
+      function animate(el) {
+        const target = parseInt(el.dataset.count, 10);
+        const suffix = el.dataset.suffix || '';
+        const dur = 1600;
+        const start = performance.now();
+        const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+        function frame(now) {
+          const t = Math.min(1, (now - start) / dur);
+          const v = Math.round(target * easeOut(t));
+          el.innerHTML = format(v) + (suffix ? '<span class="suffix">' + suffix + '</span>' : '');
+          if (t < 1) requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+      }
+
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            animate(entry.target);
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.4 });
+      counters.forEach((c) => io.observe(c));
+    })();
+
+    // ============================================================
+    // 3D HERO MARK (Three.js)
+    // Stylized rotating mark: wireframe icosahedron + inner gradient
+    // sphere + orbiting particles. Pauses when off-screen.
+    // ============================================================
+    (function () {
+      const stage = document.getElementById('heroStage');
+      const canvas = document.getElementById('heroCanvas');
+      if (!stage || !canvas) return;
+
+      // Three.js is loaded via deferred CDN script. Poll for it briefly
+      // since this inline script may run before the deferred script
+      // finishes loading.
+      let attempts = 0;
+      function waitForThree() {
+        if (typeof THREE !== 'undefined') {
+          initScene();
+          return;
+        }
+        if (++attempts > 200) return; // ~10 seconds, then give up
+        setTimeout(waitForThree, 50);
+      }
+      // Also re-check at DOMContentLoaded and window load for safety.
+      document.addEventListener('DOMContentLoaded', waitForThree);
+      window.addEventListener('load', waitForThree);
+      waitForThree();
+
+      function initScene() {
+        if (canvas._initialized) return;
+        canvas._initialized = true;
+
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        let renderer;
+        try {
+          renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+        } catch (e) {
+          console.warn('[Axe Tech] WebGL not available, hiding hero stage', e);
+          stage.style.display = 'none';
+          return;
+        }
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setClearColor(0x000000, 0);
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+        camera.position.set(0, 0, 6);
+
+        // Brand gradient stops as THREE colors
+        const stops = [
+          new THREE.Color('#00D4FF'),
+          new THREE.Color('#1E40FF'),
+          new THREE.Color('#8B3FFF'),
+          new THREE.Color('#FF2E93'),
+          new THREE.Color('#FF8A3D'),
+        ];
+        function gradColor(t) {
+          const idx = Math.min(Math.floor(t * (stops.length - 1)), stops.length - 2);
+          const localT = t * (stops.length - 1) - idx;
+          return stops[idx].clone().lerp(stops[idx + 1], localT);
+        }
+
+        // ── Outer wireframe icosahedron with gradient edge colors ──
+        const icosaGeo = new THREE.IcosahedronGeometry(1.6, 1);
+        const wireGeo = new THREE.WireframeGeometry(icosaGeo);
+        const wirePositions = wireGeo.attributes.position;
+        const colors = [];
+        for (let i = 0; i < wirePositions.count; i++) {
+          const y = wirePositions.getY(i);
+          const t = (y + 1.6) / 3.2;
+          const c = gradColor(Math.max(0, Math.min(1, t)));
+          colors.push(c.r, c.g, c.b);
+        }
+        wireGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+        const wireMat = new THREE.LineBasicMaterial({
+          vertexColors: true,
+          transparent: true,
+          opacity: 0.85,
+        });
+        const wireMesh = new THREE.LineSegments(wireGeo, wireMat);
+        scene.add(wireMesh);
+
+        // ── Inner solid gradient sphere (filled core) ──
+        const coreGeo = new THREE.IcosahedronGeometry(0.95, 4);
+        const coreColors = [];
+        const corePos = coreGeo.attributes.position;
+        for (let i = 0; i < corePos.count; i++) {
+          const y = corePos.getY(i);
+          const t = (y + 0.95) / 1.9;
+          const c = gradColor(Math.max(0, Math.min(1, t)));
+          coreColors.push(c.r, c.g, c.b);
+        }
+        coreGeo.setAttribute('color', new THREE.Float32BufferAttribute(coreColors, 3));
+        const coreMat = new THREE.MeshBasicMaterial({
+          vertexColors: true,
+          transparent: true,
+          opacity: 0.35,
+        });
+        const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+        scene.add(coreMesh);
+
+        // ── Orbiting particles ──
+        const particleCount = 220;
+        const pPositions = new Float32Array(particleCount * 3);
+        const pColors = new Float32Array(particleCount * 3);
+        const pData = []; // store original radius/angle/speed
+        for (let i = 0; i < particleCount; i++) {
+          const r = 2.1 + Math.random() * 0.9;
+          const theta = Math.random() * Math.PI * 2;
+          const phi = Math.acos(2 * Math.random() - 1);
+          const x = r * Math.sin(phi) * Math.cos(theta);
+          const y = r * Math.sin(phi) * Math.sin(theta);
+          const z = r * Math.cos(phi);
+          pPositions[i * 3] = x;
+          pPositions[i * 3 + 1] = y;
+          pPositions[i * 3 + 2] = z;
+          pData.push({ r, theta, phi, speed: 0.0003 + Math.random() * 0.0008 });
+          const c = gradColor(Math.random());
+          pColors[i * 3] = c.r;
+          pColors[i * 3 + 1] = c.g;
+          pColors[i * 3 + 2] = c.b;
+        }
+        const pGeo = new THREE.BufferGeometry();
+        pGeo.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
+        pGeo.setAttribute('color', new THREE.BufferAttribute(pColors, 3));
+        const pMat = new THREE.PointsMaterial({
+          size: 0.04,
+          vertexColors: true,
+          transparent: true,
+          opacity: 0.9,
+        });
+        const particles = new THREE.Points(pGeo, pMat);
+        scene.add(particles);
+
+        // ── Resize handler keeps the canvas square ──
+        function resize() {
+          const rect = stage.getBoundingClientRect();
+          const size = Math.min(rect.width, rect.height);
+          if (size <= 0) return;
+          renderer.setSize(size, size, false);
+          camera.aspect = 1;
+          camera.updateProjectionMatrix();
+        }
+        resize();
+        window.addEventListener('resize', resize);
+        // ResizeObserver catches layout shifts (font loading, theme toggle, etc.)
+        if (typeof ResizeObserver !== 'undefined') {
+          new ResizeObserver(resize).observe(stage);
+        }
+        // Belt-and-suspenders: poll a few frames after init in case the
+        // stage hadn't fully laid out yet.
+        let kick = 0;
+        function kickResize() {
+          resize();
+          if (++kick < 6) requestAnimationFrame(kickResize);
+        }
+        requestAnimationFrame(kickResize);
+
+        // ── Pause when off-screen ──
+        let visible = true;
+        const visibilityIO = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => { visible = entry.isIntersecting; });
+        }, { threshold: 0 });
+        visibilityIO.observe(stage);
+
+        // ── Animate loop ──
+        const start = performance.now();
+        let raf = null;
+        function animate() {
+          if (!visible) {
+            raf = requestAnimationFrame(animate);
+            return;
+          }
+          const elapsed = (performance.now() - start) / 1000;
+
+          if (!reduced) {
+            wireMesh.rotation.y = elapsed * 0.18;
+            wireMesh.rotation.x = Math.sin(elapsed * 0.15) * 0.25;
+            coreMesh.rotation.y = -elapsed * 0.12;
+            coreMesh.rotation.z = Math.cos(elapsed * 0.18) * 0.2;
+
+            // Subtle breathing on core
+            const breathe = 1 + Math.sin(elapsed * 0.8) * 0.04;
+            coreMesh.scale.set(breathe, breathe, breathe);
+
+            // Rotate particles on their orbits
+            const positions = particles.geometry.attributes.position.array;
+            for (let i = 0; i < particleCount; i++) {
+              const d = pData[i];
+              d.theta += d.speed;
+              const x = d.r * Math.sin(d.phi) * Math.cos(d.theta);
+              const y = d.r * Math.sin(d.phi) * Math.sin(d.theta);
+              const z = d.r * Math.cos(d.phi);
+              positions[i * 3] = x;
+              positions[i * 3 + 1] = y;
+              positions[i * 3 + 2] = z;
+            }
+            particles.geometry.attributes.position.needsUpdate = true;
+          }
+
+          renderer.render(scene, camera);
+          raf = requestAnimationFrame(animate);
+        }
+        animate();
+      }
+    })();
+
+    // ============================================================
+    // SCROLL PROGRESS BAR (fills 0→100% across page scroll)
+    // ============================================================
+    (function () {
+      const bar = document.getElementById('scrollProgress');
+      if (!bar) return;
+      let raf = null;
+      function update() {
+        const doc = document.documentElement;
+        const scrollTop = window.scrollY || doc.scrollTop;
+        const max = (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight;
+        const progress = max > 0 ? Math.min(1, Math.max(0, scrollTop / max)) : 0;
+        bar.style.transform = 'scaleX(' + progress + ')';
+        raf = null;
+      }
+      function schedule() {
+        if (raf == null) raf = requestAnimationFrame(update);
+      }
+      window.addEventListener('scroll', schedule, { passive: true });
+      window.addEventListener('resize', schedule);
+      window.addEventListener('load', schedule);
+      update();
+    })();
+  </script>
+</body>
+</html>
